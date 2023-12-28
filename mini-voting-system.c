@@ -15,12 +15,15 @@ int main(){
 
         switch(choice){
             case '1':
-                studentPanel();
+                // studentPanel();
+                printf("1");
                 break;
             case '2':
-                adminPanel();
+                // adminPanel();
+                printf("2");
                 break;
             case '0':
+                printf("\nExiting program...");
                 return 0;
             default:
                 printf("\nInvalid option");
@@ -38,14 +41,15 @@ void display(){
 }
 
 int choiceforUser(){
-    int choice;
+    char choice;
     
     printf("\n\tUSER CHOICES (Select among the options available)\n");
     printf("\t\t[1] Add Record\n");
     printf("\t\t[2] Display All Records\n");
     printf("\t\t[0] Exit\n");
     printf("\tChoice: ");
-    scanf("%d", &choice);
+    scanf(" %c", &choice);
 
     return choice;
 }
+
