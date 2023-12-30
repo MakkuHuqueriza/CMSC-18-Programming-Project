@@ -3,7 +3,6 @@
 #include <conio.h>
 #include <string.h>
 
-//define the structure used 
 struct currentValidID{
     int year;
     char branch[6];
