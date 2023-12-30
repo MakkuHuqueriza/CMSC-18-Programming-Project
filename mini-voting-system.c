@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <string.h>
-
+//test
 struct currentValidID{
     int year;
     char branch[6];
@@ -172,6 +172,7 @@ int authenticateAdmin(){
 }
 
 void initiateNewElection(){
+	int i;
     printf("\nNew Election Initiation:\n");
     
     printf("\nElections for which Year: ");
@@ -183,12 +184,12 @@ void initiateNewElection(){
     printf("Enter the no. of candidates:");
     scanf("%d",&numberOfCandidates);
 
-   for (int i = 0; i < currentValidID.totalVoters; i++)
+   for (i = 0; i < currentValidID.totalVoters; i++)
     {
         studentVotes[i] = '0';
     }
 
-    for (int i = 0;i < numberOfCandidates; i++) // Number of candidates is already pre-determined with maximum of 20 candidates
+    for (i = 0;i < numberOfCandidates; i++) // Number of candidates is already pre-determined with maximum of 20 candidates
     {
         candidateArray[i].cid=i+1;
         printf("Enter name of candidate %d: ",i+1);
@@ -219,10 +220,11 @@ void saveElectionInfoInFile(){
 }
 
 void createCandidateFiles(){
+	int i;
     printf("\nCreating candidate files...\n");
     FILE *fp;
 	char filename[20];
-    for(int i = 1;i <= numberOfCandidates; i++){
+    for(i = 1;i <= numberOfCandidates; i++){
         sprintf(filename,"candidate%d.txt",i);
 		fp=fopen(filename,"w");
         fprintf(
