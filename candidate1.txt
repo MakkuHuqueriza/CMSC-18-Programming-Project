@@ -1,5 +1,0 @@
-CANDIDATE 1: Mark
-NUMBER OF VOTES: 2
-The following are the voters' roll out numbers:
-7
-9

@@ -24,6 +24,8 @@ CANDIDATE candidateArray[20]; //Create instances and stores the information nece
 int numberOfCandidates; //Total number of candidates running in an election
 char studentVotes[500]; //To store information of votes given by each student
 
+//Sample User ID:2018hello00064 year:2018 branch code:hello rollno:00064
+
 //Function prototypes
 void display();
 int choiceforUser();
@@ -44,11 +46,18 @@ int isVoted(char userID[15]);
 int extractYear(char userID[15]);
 int extractRollNo(char userID[15]);
 int checkBranchCode(char userID[15]);
-
+int readVoteCount();
+void updateVoteCount(int count);
+int yearchecker(int year);
+int branchchecker(char branch[]);
+int totalvoterschecker(int num);
+int candidatechecker(int num);
 
 int main(){
 
     char choice;
+    int i;
+    char ExitMessage[100] = "\n\tProgram is now exiting... Have a nice day!\n";
     
     while(1){ 
         display();
@@ -56,18 +65,25 @@ int main(){
 
         switch(choice){
             case '1':
-                studentPanel();
+                studentPanel(); //Move towards the student panel
                 break;
             case '2':
-                adminPanel();
+                adminPanel(); //Move towards the admin panel
                 break;
-            case '0':
-                printf("\nExiting program...");
+            case '0': 
+                
+                for(i=0; i<strlen(ExitMessage); i++) //Print exitmessage
+                {
+                    printf("%c",ExitMessage[i]);
+                    Sleep(40);
+                }
                 return 0;
+                break;
             default:
-                printf("\nInvalid option (Press any key to continue)");
+                printf("\nInvalid option. Press any key to continue:");
                 getch();
                 system("cls");
+                break;
         }
     }
     return 0;
@@ -100,13 +116,13 @@ void adminPanel(){
     while(1){
         system("cls");
         if(authenticateAdmin()!=1){
-            printf("\nWrong Username or Password (Press Enter)");
+            printf("\nWrong Username or Password. Press any key to continue:");
             getch();
             system("cls");           
             break;
         }
 
-        printf("\n\nLOGGED IN SUCCESSFULLY (Press Enter)");
+        printf("\n\nLOGGED IN SUCCESSFULLY. Press any key to continue:");
 		getch();
        
 
@@ -127,6 +143,7 @@ void adminPanel(){
                     initiateNewElection();
                     saveElectionInfoInFile();
                     createCandidateFiles();
+                    printf("\nPress any key to continue: ");
                     getch();
                     break;
                 case '2':
@@ -139,6 +156,7 @@ void adminPanel(){
                     break;
                 case '4':
                 	banID();
+                    getch();
                     break;
                 case '5':
                     WinnerCid = getWinner();
@@ -154,13 +172,14 @@ void adminPanel(){
                         printf("%d. %s -> %d votes\n",candidateArray[i].cid,candidateArray[i].cname,candidateArray[i].votes);
                     }
                     printf("\nVoting Percentage: %d %%\n\n",(totalVotedNow*100)/currentValidID.totalVoters);
+                    printf("Press any key to continue");
                     getch();
                     break;
                 case '6':
                 	system("cls");
                     return; 
                 default:
-                    printf("Invalid Option");
+                    printf("Invalid Option. Press any key to continue:");
 					getch();
             }
 			
@@ -173,7 +192,7 @@ int authenticateAdmin(){
     char username[16], password[11];
     
     printf("\nPlease input Admin Credentials to log-in Admin Panel: ");
-    printf("\nEnter username(Max of 15 characters): ");
+    printf("\n\nEnter username(Max of 15 characters): ");
     scanf("%s",username);
     if((strcmp(username,"Admin"))!=0) //Checks if the inputted username matches the right username
         return 0;
@@ -199,14 +218,46 @@ int authenticateAdmin(){
 void initiateNewElection(){
     printf("\nNew Election Initiation:\n");
     
-    printf("\nElections for which Year: ");
-    scanf("%d",&currentValidID.year);
-    printf("Enter branch code:");
-    scanf("%s",currentValidID.branch);
-    printf("Enter maximum number of voters:");
-    scanf("%d",&currentValidID.totalVoters);
-    printf("Enter the no. of candidates:");
-    scanf("%d",&numberOfCandidates);
+    do{
+        printf("\nElections for which Year: ");
+        scanf("%d",&currentValidID.year);
+
+        if(!yearchecker(currentValidID.year)){
+            printf("\nPlease re-enter a valid four-digit year.\n");
+        }
+    }while(!yearchecker(currentValidID.year));
+       
+
+    do{
+        printf("\nEnter branch code (should be exactly 5 characters): ");
+        scanf("%s",currentValidID.branch);
+
+        if(!branchchecker(currentValidID.branch)){
+            printf("\nPlease re-enter a valid 5 character branch code\n");
+        }
+    }while(!branchchecker(currentValidID.branch));
+
+    do{
+        printf("\nEnter maximum number of voters (Maximum of 500 voters): ");
+        scanf("%d",&currentValidID.totalVoters);
+
+        if(!totalvoterschecker(currentValidID.totalVoters)){
+            printf("\nPlease re-enter a valid amount of voters\n");
+        }
+    }while(!totalvoterschecker(currentValidID.totalVoters));
+    
+
+    do{
+        printf("Enter the no. of candidates (Maximum of 20 candidates): ");
+        scanf("%d",&numberOfCandidates);
+
+        if(!candidatechecker(numberOfCandidates)){
+            printf("\nPlease re-enter a valid amount of candidates\n");
+        }  
+    }while(!candidatechecker(numberOfCandidates));
+        
+
+    
     
     int i;
    	for (i = 0; i < currentValidID.totalVoters; i++)
@@ -217,17 +268,21 @@ void initiateNewElection(){
     for (i = 0;i < numberOfCandidates; i++) // Number of candidates is already pre-determined with maximum of 20 candidates
     {
         candidateArray[i].cid=i+1;
-        printf("Enter name of candidate %d: ",i+1);
+        printf("\nEnter name of candidate %d: ",i+1);
         scanf(" %s",candidateArray[i].cname);
         candidateArray[i].votes=0;
     }
+
+    FILE *votepointer = fopen("vote_count.txt", "w");
+
+    fclose(votepointer);
     return;
 }
 
 
 //This function creates a text file to save election information
 void saveElectionInfoInFile(){
-    printf("Saving Election Info in File...\n");
+    printf("\nSaving Election Info in File...\n");
     FILE *fpointer = fopen("ElectionInfo.txt", "w");
     if(fpointer==NULL)
     {
@@ -243,7 +298,7 @@ void saveElectionInfoInFile(){
         numberOfCandidates
     );
     fclose(fpointer);
-    printf("Saved Successfully :>");
+    printf("\nSaved Successfully :>");
 }
 
 //This function creates file for each candidates
@@ -256,12 +311,12 @@ void createCandidateFiles(){
         sprintf(filename,"candidate%d.txt",i);
 		fp=fopen(filename,"w");
         fprintf(
-            fp,"CANDIDATE %d: %s",
-            i, candidateArray[i-1].cname
+            fp,"0\n%s",
+            candidateArray[i-1].cname
         );
 		fclose(fp);
     }
-    printf("Created Files successfully\n");
+    printf("\nCreated Files successfully\n");
 }
 
 //This functions load the information that was already created into the program 
@@ -310,14 +365,13 @@ void loadElectionInfoFromFile()
                 break;             // Exit the loop to prevent further attempts
             }
             else{
+    
                 candidateArray[i - 1].cid = i;
-                fscanf(f2, "CANDIDATE %d: %s", &i, candidateArray[i - 1].cname);
-                fscanf(f2, "NUMBER OF VOTES: %d", &candidateArray[i - 1].votes);
-        
-                fscanf(f2, "The following are the voters' roll out number:");
+                fscanf(f2,"%d",&candidateArray[i-1].votes);
+                fscanf(f2,"%s",candidateArray[i-1].cname);
+               
                 while (fscanf(f2, "%d", &location) == 1)
                 {
-                    fscanf(f2, "%d", &location);
                     studentVotes[location - 1] = i + 48;
                 }
             }
@@ -329,9 +383,8 @@ void loadElectionInfoFromFile()
         int location;
         f3 = fopen("banned.txt", "r+");
         if (f3 == NULL){
-            printf("\tUnable to open banned file for reading.\n"); //ADD INFO THAT IGNORE NI IF WALAY BANNED USER JUD IN THE FIRST PLACE
             fclose(f3);        // Close the banned.txt file before returning
-            successFlag = 0;    // Set the flag to indicate failure
+            
         }
         else{
             while (fscanf(f3, "%d", &location) == 1){
@@ -345,17 +398,23 @@ void loadElectionInfoFromFile()
     }
     // Print success message only if all files were loaded successfully
     if (successFlag){
-        printf("\n\tData was loaded successfully.");
+        printf("\n\tData was loaded successfully. Press any key to continue:");
     }
     getch();
 }
 
-//This function deletes illegeal votes
+//This function deletes illegal votes
 void deleteIllegalVote(char userID[15]){
 
     FILE *fp,*fcp;
     char filename[20];
     char line[20];
+
+    if(isValid(userID) != 1){
+        printf("\nInvalid User ID. Press any key to exit");
+        getch();
+        return;
+    }
 
     int location = extractRollNo(userID);
     sprintf(filename,"candidate%d.txt",candidateArray[studentVotes[location-1]-49].cid);
@@ -364,14 +423,14 @@ void deleteIllegalVote(char userID[15]){
 
     if ((fp = fopen(filename,"r")) == NULL){    
 
-        printf("\nFile cannot be opened...Operation Failed");
+        printf("\nFile cannot be opened...1");
         return;
     }
     printf("\nDeleting in process...\n ");    
 
     if ((fcp = fopen("tmp.txt","w")) == NULL){    
 
-        printf("\nFile cannot be opened...Operation Failed");
+        printf("\nFile cannot be opened...2");
         return;
     }
     
@@ -386,7 +445,7 @@ void deleteIllegalVote(char userID[15]){
 
     if ((fp = fopen(filename,"w")) == NULL){    
 
-        printf("\nFile cannot be opened...Operation Failed");
+        printf("\nFile cannot be opened...3");
         return;
     }
 
@@ -406,11 +465,15 @@ void deleteIllegalVote(char userID[15]){
     fclose(fp);
     fclose(fcp);
     remove("tmp.txt");
-    printf("\nVote deleted successfully\nPress any key to continue...");
+
+    int countremover = readVoteCount();
+    updateVoteCount(--countremover);
+
+    printf("\nVote deleted successfully\nPress any key to continue:");
     getch();
 }
 
-//This functions can ban students with specific ID
+//This functions can ban students using their specific roll number
 void banID(){
 
     printf("\nCreating Banned.txt...\n");
@@ -422,7 +485,7 @@ void banID(){
         fclose(fp);
         return;
     }
-    printf("Just Enter last roll no to ban\nPress 0 to exit... ");
+    printf("Just enter last roll number to ban\nPress 0 to exit... ");
     int input;
     while(1){
 
@@ -434,7 +497,7 @@ void banID(){
         fprintf(fp,"%d\n",input);
     }
     fclose(fp);
-    printf("Created Successfully\n");
+    printf("\nCreated Successfully. Press any key to continue:");
 }
 
 //This function calculates the winner of the election
@@ -454,15 +517,19 @@ int getWinner(){
     return winnerCid;
 }
 
+//This function is a student panel for voting 
 void studentPanel()
 {
     system("cls");
+    char key;
     char userID[15];
     char voteInput;
-    int i, totalVoters, ctr = 0;
+    int i, totalVoters;
+	static int ctr;
 	int year = currentValidID.year;
     totalVoters = currentValidID.totalVoters;
 
+	ctr = readVoteCount();
     do
     {
     	printf("\n\n\t\t      ***STUDENT OFFICIAL BALLOT***\n");
@@ -472,9 +539,11 @@ void studentPanel()
 	    printf("\n\t 2. The branch code and year should be valid.");
 	    printf("\n\t 3. Make sure the format of the User ID is accurate.");
 	    printf("\n\t 4. Input the YEAR, BRANCH CODE, and the ROLL NUMBER respectively.");
+        printf("\n\t Enter 0 to exit the student panel");
         printf("\n\t  Enter user ID:");
         scanf("%s", userID);
 
+		//The following are the conditions based on the user input
         if (strcmp(userID, "0") == 0)
         {
             return;
@@ -482,22 +551,41 @@ void studentPanel()
         else if (!isValid(userID))
         {
             printf("\n\tInvalid User ID. Please make sure your User ID follows the correct format and is 14 characters long. \n\tPress Enter to continue. If you wish to exit, press 0.");
-            getch();
+            key = getch();
+			if (key == '0')
+			{
+			    system("cls");
+			    return;
+			}
+            system("cls");
             continue;
         }
         else if (isBanned(userID))
         {
             printf("\n\tThe provided User ID has been temporarily suspended.\n\tPlease reach out to the administrator to inquire about the reason for the suspension.\n\tPress Enter to proceed. If you wish to exit, press 0.");
-            getch();
+            key = getch();
+			if (key == '0')
+			{
+			    system("cls");
+			    return;
+			}
+            system("cls");
             continue;
         }
         else if (isVoted(userID))
         {
             printf("\n\tThe User ID you have entered has already voted. \n\tContact Admin for further query. \n\tPress Enter to continue. If you wish to exit, press 0.");
-            getch();
+            key = getch();
+			if (key == '0')
+			{
+			    system("cls");
+			    return;
+			}
+            system("cls");
             continue;
         }
-
+		
+		//Displays candidates 
         printf("\n\n\tCANDIDATES OF ELECTION:");
 		for (i = 0; i < numberOfCandidates; i++)
 		{
@@ -508,30 +596,33 @@ void studentPanel()
 		voteInput = getch();
 		printf("*");
 		
+		//A condition if vote input is invalid
 		if (voteInput-48 < 1 || voteInput-48 > numberOfCandidates)
 		{
 		    printf("\n\tVote is INVALID.\n\tPress any key to try again.");
 		    getch(); // Store the result in a variable
-		        system("cls");
-		        return;
+		    system("cls");
+	        continue;
 		}
 		saveVote(userID, voteInput);
 		printf("\n\t-----------------------------------------------------------------------------------------------------------\n");
 		printf("\tCongratulations! Your vote has been cast successfully. ");
 		printf("\n\tOnce done, press enter to cast another vote for the next voter.");
 		printf("\n\tIf you wish to exit, press 0.");
-		char key = getch(); // Store the result in a variable
+        ctr++;
+		updateVoteCount(ctr);
+
+		key = getch(); // Store the result in a variable
 		if (key == '0')
 		{
 		    system("cls");
 		    return;
 		}
 		system("cls");
-		ctr++;
     } while (ctr < totalVoters);
 
 	// Check if the loop ended because ctr exceeded totalVoters
-	if (ctr > totalVoters)
+	if (ctr == totalVoters)
 	{
 	char EndMessage[100]     = " \n\tAll votes have been cast. Exiting...\n";
 	    for(i=0; i<strlen(EndMessage); i++)
@@ -539,10 +630,12 @@ void studentPanel()
 	        printf("%c",EndMessage[i]);
 	        Sleep(40);
 	    }
+    Sleep(3000);
 	system("cls");	
 	}
 }
 
+//This function verifies if the userID is valid
 int isValid(char userID[15]) 
 {
     if(strlen(userID)!=14)
@@ -557,73 +650,28 @@ int isValid(char userID[15])
     return 1;
 }
 
+//This function checks if the userID has already voted
 int isVoted(char userID[15])
 {
     int location = extractRollNo(userID);
 
-    if (studentVotes[location - 1] == '0')
-    {
-        // The student has not voted yet, check candidate files
-        int i;
-        for (i = 1; i <= numberOfCandidates; i++)
-        {
-            char filename[20];
-            sprintf(filename, "candidate%d.txt", i);
-
-            FILE *candidateFile = fopen(filename, "r");
-            if (candidateFile == NULL)
-            {
-                printf("Error: Unable to open %s for reading.\n", filename);
-                return -1; // Return an error code or handle it appropriately
-            }
-
-            int rollNumberInFile;
-            while (fscanf(candidateFile, "%d", &rollNumberInFile) == 1)
-            {
-                if (rollNumberInFile == location)
-                {
-                    fclose(candidateFile);
-                    return 1; // The student has already voted for this candidate
-                }
-            }
-
-            fclose(candidateFile);
-        }
+    if(studentVotes[location-1]=='0')
         return 0; // The student has not voted for any candidate
-    }
     else
-    {
         return 1; // The student has already voted
-    }
+    
 }
 
+//This function checks if the userID is banned
 int isBanned(char userID[15]){
-    int location = extractRollNo(userID);
-    FILE *bannedList = fopen("Banned.txt", "r");
-
-    if (bannedList == NULL)
-    {
-        return 0; // Return an error code or handle it appropriately
-    }
-
-    int bannedRollNumber;
-    while (fscanf(bannedList, "%d", &bannedRollNumber) == 1)
-    {
-        // Consume the newline character after reading the integer
-        fgetc(bannedList);
-
-        if (bannedRollNumber == location)
-        {
-            fclose(bannedList);
-            return 1; // The student is banned
-        }
-    }
-
-    fclose(bannedList);
-
-    return 0; // The student is not banned
+    int location=extractRollNo(userID);
+    if(studentVotes[location-1]=='$')
+        return 1; // The student is banned
+    else
+        return 0; // The student is not banned
 }
 
+//This function updates the number of votes, and the roll out number of the voter inside the file
 void saveVote(char userID[15], char voteInput)
 {
     char filename[20];
@@ -639,26 +687,14 @@ void saveVote(char userID[15], char voteInput)
     int location = extractRollNo(userID);
     studentVotes[location - 1] = voteInput;
 
-    // Read the existing votes count from the file
-    int currentVotes;
-    int successfulRead = fscanf(fp, "CANDIDATE %*d: %*s\nNUMBER OF VOTES: %d", &currentVotes);
-    fseek(fp, 0, SEEK_SET);
-
-    // If the read was not successful
-    if (successfulRead != 1)
-    {
-        currentVotes = 0;
-    }
-
     // Update the in-memory votes count
-    candidateArray[voteInput - 49].votes = currentVotes + 1;
+    candidateArray[voteInput - 49].votes++;
     
     // Write the updated votes count
-    fprintf(fp, "CANDIDATE %d: %s\n", voteInput - 48, candidateArray[voteInput - 49].cname);
-    fprintf(fp, "NUMBER OF VOTES: %d\n", candidateArray[voteInput - 49].votes);
-	fprintf(fp, "The following are the voters' roll out numbers:\n");
+    fseek(fp, 0, SEEK_SET);
+    fprintf(fp, "%d\n", candidateArray[voteInput - 49].votes);
     fseek(fp, 0, SEEK_END);
-    fprintf(fp, "%d\n", location);
+    fprintf(fp, "\n%d", location);
 
     fclose(fp);
 }
@@ -702,7 +738,74 @@ int checkBranchCode(char userID[15]){
         return 0;
 }
 
+//This function reads the number of votes
+int readVoteCount() {
+    FILE *file = fopen("vote_count.txt", "r");
+    int count = 0;
+    if (file != NULL) {
+        fscanf(file, "%d", &count);
+        fclose(file);
+    }
+    return count;
+}
 
+//This function updates the number of votes
+void updateVoteCount(int count) {
+    FILE *file = fopen("vote_count.txt", "w");
+    if (file != NULL) {
+        fprintf(file, "%d", count);
+        fclose(file);
+    }
+}
+
+//This function checks if the user inputs valid year
+int yearchecker(int year)
+{
+    if (year >= 1000 && year <= 9999)
+    {
+        return 1; // Valid year
+    }
+    else
+    {
+        return 0; // Invalid year
+    }
+}
+
+//This function checks if the user inputs valid branch code 
+int branchchecker(char branch[]){
+    if (strlen(branch) == 5)
+    {
+        return 1; // Valid branch code
+    }
+    else
+    {
+        return 0; // Invalid branch code
+    }
+}
+
+//This function checks if the user inputs valid amount of voters
+int totalvoterschecker(int num){
+    if (num >= 1 && num <= 500)
+    {
+        return 1; // Valid number of total voters
+    }
+    else
+    {
+        return 0; // Invalid number of total voters
+    }
+}
+//This function checks if the user inputs valid amount of candidates
+
+int candidatechecker(int num){
+    if (num >= 1 && num <= 20)
+    {
+        return 1; // Valid number of total candidates
+    }
+    else
+    {
+        return 0; // Invalid number of total candidates
+    }
+}
 
 
 
