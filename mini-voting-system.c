@@ -80,7 +80,7 @@ int main(){
                 return 0;
                 break;
             default:
-                printf("\nInvalid option. Press any key to continue:");
+                printf("\nInvalid option. Please enter a valid choice. \nPress any key to continue:");
                 getch();
                 system("cls");
                 break;
@@ -92,9 +92,9 @@ int main(){
 //This function displays introductory message about the program
 void display(){
 	printf("\n=================================================================================================================\n");
-	printf("THIS PROGRAM IS A MINI-VOTING SYSTEM\n");
-    printf("UNANTICIPATED USER ACTIONS OR INPUTS MAY LEAD TO BUGS OR THE TERMINATION OF THE PROGRAM.\n");
-	printf("=================================================================================================================\n");
+    printf("                                     WELCOME TO THE MINI-VOTING SYSTEM\n");
+    printf("        (Please be aware that unanticipated actions or inputs may cause program issues or termination)\n");
+    printf("=================================================================================================================\n");
 }
 
 //This function displays the menu for the user to choose between student and admin panel
@@ -116,7 +116,8 @@ void adminPanel(){
     while(1){
         system("cls");
         if(authenticateAdmin()!=1){
-            printf("\nWrong Username or Password. Press any key to continue:");
+            printf("\nERROR: Incorrect username or password. Please try again.");
+            printf("\nPress any key to continue:");
             getch();
             system("cls");           
             break;
@@ -132,8 +133,16 @@ void adminPanel(){
             char inputID[15]; int i;
             char input; char banInp;
             int WinnerCid, totalVotedNow=0;
-            printf("\n\tUSER CHOICES (Select among the options available)");
-            printf("\n\t\t[1] New Election\n\t\t[2] Continue Previous Election\n\t\t[3] Delete Illegal Vote\n\t\t[4] Ban User IDs\n\t\t[5] Result\n\t\t[6] Logout\n\tChoice: ");
+            printf("\n===============================================");
+            printf("\n\t  ADMIN PANEL - USER CHOICES");
+            printf("\n===============================================");
+            printf("\n\t[1] New Election");
+            printf("\n\t[2] Continue Previous Election");
+            printf("\n\t[3] Delete Illegal Vote");
+            printf("\n\t[4] Ban User IDs");
+            printf("\n\t[5] Result");
+            printf("\n\t[6] Logout");
+            printf("\n\nEnter Your Choice: ");
 			scanf(" %c",&input);
 
             switch(input)
@@ -143,30 +152,32 @@ void adminPanel(){
                     initiateNewElection();
                     saveElectionInfoInFile();
                     createCandidateFiles();
-                    printf("\nPress any key to continue: ");
+                    printf("\nElection setup completed successfully. \nPress any key to continue: ");
                     getch();
                     break;
                 case '2':
                     loadElectionInfoFromFile();
+                    printf("\nElection information loaded successfully.\n");
                     break;
                 case '3':
-                    printf("\nEnter user ID to delete its vote: ");
+                    printf("\nEnter user ID to delete their vote: ");
                     scanf("%s",inputID);
                     deleteIllegalVote(inputID);
                     break;
                 case '4':
                 	banID();
+                    printf("\nUser ID banned successfully. \nPress any key to continue");
                     getch();
                     break;
                 case '5':
                     WinnerCid = getWinner();
                     if(WinnerCid != -1){
-                        printf("\nWinner is %s with %d votes\n",candidateArray[WinnerCid-1].cname,candidateArray[WinnerCid-1].votes);
+                        printf("\nWinner: %s with %d votes.\n",candidateArray[WinnerCid-1].cname,candidateArray[WinnerCid-1].votes);
                     }
                     else{
-                        printf("\nIts A TIE");
+                        printf("\nIt's a tie.");
                     }
-                    printf("\nFull Result\n");
+                    printf("\nFull Result:\n");
                     for(i = 0;i<numberOfCandidates;i++){
                         totalVotedNow+=candidateArray[i].votes;
                         printf("%d. %s -> %d votes\n",candidateArray[i].cid,candidateArray[i].cname,candidateArray[i].votes);
@@ -192,25 +203,27 @@ int authenticateAdmin(){
     char username[16], password[11];
     
     printf("\nPlease input Admin Credentials to log-in Admin Panel: ");
-    printf("\n\nEnter username(Max of 15 characters): ");
+    printf("\n\nEnter username (Max of 15 characters): ");
     scanf("%s",username);
-    if((strcmp(username,"Admin"))!=0) //Checks if the inputted username matches the right username
+    
+    if((strcmp(username,"Admin"))!=0){ //Checks if the inputted username matches the right username
+    printf("Invalid username. Access denied.\n");
         return 0;
-    else
-    {
-        printf("Enter Password(Max of 10 characters): ");
+    } else {
+        printf("Enter Password (Max of 10 characters): ");
         int i=0;
         for(i=0;i<10;i++)
         {
             password[i]=getch();    
-            printf("%c",'*');
+            printf("%c", '*');
         }
         password[i]='\0';
         if((strcmp(password,"votewisely"))!=0){ //Checks if the inputted password matches the right password
-            printf("\n");
+            printf("\nInvalid password. Access denied.\n");
             return 0;
         }
     }
+    printf("\nAuthentication successful. Access granted.\n");
     return 1;
 }
 
@@ -219,21 +232,21 @@ void initiateNewElection(){
     printf("\nNew Election Initiation:\n");
     
     do{
-        printf("\nElections for which Year: ");
+        printf("\nEnter the Year for the New Election: ");
         scanf("%d",&currentValidID.year);
 
         if(!yearchecker(currentValidID.year)){
-            printf("\nPlease re-enter a valid four-digit year.\n");
+            printf("\nInvalid format. Please re-enter a valid four-digit year.\n");
         }
     }while(!yearchecker(currentValidID.year));
        
 
     do{
-        printf("\nEnter branch code (should be exactly 5 characters): ");
+        printf("\nEnter branch code (exactly 5 characters): ");
         scanf("%s",currentValidID.branch);
 
         if(!branchchecker(currentValidID.branch)){
-            printf("\nPlease re-enter a valid 5 character branch code\n");
+            printf("\nInvalid branch code. Please re-enter exactly 5 characters.\n");
         }
     }while(!branchchecker(currentValidID.branch));
 
@@ -242,17 +255,17 @@ void initiateNewElection(){
         scanf("%d",&currentValidID.totalVoters);
 
         if(!totalvoterschecker(currentValidID.totalVoters)){
-            printf("\nPlease re-enter a valid amount of voters\n");
+            printf("\nInvalid voter count. Please re-enter a valid number (up to 500).\n");
         }
     }while(!totalvoterschecker(currentValidID.totalVoters));
     
 
     do{
-        printf("Enter the no. of candidates (Maximum of 20 candidates): ");
+        printf("Enter the number of candidates (Maximum of 20 candidates): ");
         scanf("%d",&numberOfCandidates);
 
         if(!candidatechecker(numberOfCandidates)){
-            printf("\nPlease re-enter a valid amount of candidates\n");
+            printf("\nInvalid candidate count. Please re-enter a valid number (up to 20).\n");
         }  
     }while(!candidatechecker(numberOfCandidates));
         
@@ -399,6 +412,8 @@ void loadElectionInfoFromFile()
     // Print success message only if all files were loaded successfully
     if (successFlag){
         printf("\n\tData was loaded successfully. Press any key to continue:");
+    } else {
+        printf("\n\tError: Unable to load all date. Please check the files and try again.\n");
     }
     getch();
 }
@@ -469,7 +484,7 @@ void deleteIllegalVote(char userID[15]){
     int countremover = readVoteCount();
     updateVoteCount(--countremover);
 
-    printf("\nVote deleted successfully\nPress any key to continue:");
+    printf("\nVote deleted successfully\nPress any key to continue: ");
     getch();
 }
 
@@ -485,11 +500,11 @@ void banID(){
         fclose(fp);
         return;
     }
-    printf("Just enter last roll number to ban\nPress 0 to exit... ");
+    printf("Enter a student last roll number to ban\nPress 0 to exit... ");
     int input;
     while(1){
 
-        printf("\nEnter Number: ");
+        printf("\nEnter Roll Number: ");
         scanf("%d",&input);
         if(input==0)
             break;
@@ -497,7 +512,7 @@ void banID(){
         fprintf(fp,"%d\n",input);
     }
     fclose(fp);
-    printf("\nCreated Successfully. Press any key to continue:");
+    printf("\nCreated Successfully. Press any key to continue: ");
 }
 
 //This function calculates the winner of the election
@@ -532,15 +547,16 @@ void studentPanel()
 	ctr = readVoteCount();
     do
     {
-    	printf("\n\n\t\t      ***STUDENT OFFICIAL BALLOT***\n");
-    	printf("\t\t    ***SPECIAL GENERAL ELECTION***\n");
-    	printf("\n\t REMINDERS:");
-	    printf("\n\t 1. The length of the userID should be 14.");
-	    printf("\n\t 2. The branch code and year should be valid.");
-	    printf("\n\t 3. Make sure the format of the User ID is accurate.");
-	    printf("\n\t 4. Input the YEAR, BRANCH CODE, and the ROLL NUMBER respectively.");
-        printf("\n\t Enter 0 to exit the student panel");
-        printf("\n\t  Enter user ID:");
+    	printf("\n===============================================================================");
+        printf("\n\t  **STUDENT OFFICIAL BALLOT - SPECIAL GENERAL ELECTION**");
+        printf("\n===============================================================================");
+        printf("\n\t REMINDERS:");
+        printf("\n\t 1. The length of the userID should be 14.");
+        printf("\n\t 2. The branch code and year should be valid.");
+        printf("\n\t 3. Make sure the format of the User ID is accurate.");
+        printf("\n\t 4. Input the YEAR, BRANCH CODE, and the ROLL NUMBER respectively.");
+        printf("\n\t (Enter 0 to exit the student panel)");
+        printf("\n\n\t Enter user ID: ");
         scanf("%s", userID);
 
 		//The following are the conditions based on the user input
@@ -550,7 +566,7 @@ void studentPanel()
         }
         else if (!isValid(userID))
         {
-            printf("\n\tInvalid User ID. Please make sure your User ID follows the correct format and is 14 characters long. \n\tPress Enter to continue. If you wish to exit, press 0.");
+            printf("\n\tError: Invalid User ID. Please make sure your User ID follows the correct format and is 14 characters long. \n\tPress Enter to continue. To exit, press 0.");
             key = getch();
 			if (key == '0')
 			{
@@ -562,7 +578,7 @@ void studentPanel()
         }
         else if (isBanned(userID))
         {
-            printf("\n\tThe provided User ID has been temporarily suspended.\n\tPlease reach out to the administrator to inquire about the reason for the suspension.\n\tPress Enter to proceed. If you wish to exit, press 0.");
+            printf("\n\tError: The provided User ID has been temporarily suspended.\n\tContact the administrator for information on the suspension. \n\tPress Enter to proceed. If you wish to exit, press 0.");
             key = getch();
 			if (key == '0')
 			{
@@ -574,7 +590,7 @@ void studentPanel()
         }
         else if (isVoted(userID))
         {
-            printf("\n\tThe User ID you have entered has already voted. \n\tContact Admin for further query. \n\tPress Enter to continue. If you wish to exit, press 0.");
+            printf("\n\tError: The User ID you have entered has already voted. \n\tPlease contact Admin for further assistance. \n\tPress Enter to continue. If you wish to exit, press 0.");
             key = getch();
 			if (key == '0')
 			{
@@ -599,7 +615,7 @@ void studentPanel()
 		//A condition if vote input is invalid
 		if (voteInput-48 < 1 || voteInput-48 > numberOfCandidates)
 		{
-		    printf("\n\tVote is INVALID.\n\tPress any key to try again.");
+		    printf("\n\tError: Vote is INVALID.\n\tPress any key to try again.");
 		    getch(); // Store the result in a variable
 		    system("cls");
 	        continue;
@@ -607,7 +623,7 @@ void studentPanel()
 		saveVote(userID, voteInput);
 		printf("\n\t-----------------------------------------------------------------------------------------------------------\n");
 		printf("\tCongratulations! Your vote has been cast successfully. ");
-		printf("\n\tOnce done, press enter to cast another vote for the next voter.");
+		printf("\n\tPress enter to cast another vote for the next voter.");
 		printf("\n\tIf you wish to exit, press 0.");
         ctr++;
 		updateVoteCount(ctr);
