@@ -3,6 +3,7 @@
 #include <conio.h>
 #include <string.h>
 #include <windows.h>
+#include<stdbool.h>
 
 //Struct containing the necessary components for creation of election and will also be reference for valid ID users
 struct currentValidID{
@@ -113,7 +114,8 @@ int choiceforUser(){
 
 //This function handles all related-functions with regards to administrative panel
 void adminPanel(){
-    while(1){
+    bool isTrue = true;
+    while(isTrue){
         system("cls");
         if(authenticateAdmin()!=1){
             printf("\nERROR: Incorrect username or password. Please try again.");
@@ -127,7 +129,7 @@ void adminPanel(){
 		getch();
        
 
-        while(1)
+        while(isTrue)
         {
             system("cls");
             char inputID[15]; int i;
