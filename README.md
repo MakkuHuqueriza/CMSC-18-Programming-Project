@@ -40,7 +40,7 @@ gcc mini-voting-system.c -o mini-voting-system
 ## <a id="usage"></a>Usage
 Execute the Program by running the executable
 ```bash
-./mini-voting-system
+mini-voting-system.exe
 ```
 ## <a id="contributing"></a>Contributing
 If you want to improve this project and contribute, here are the steps below.
