@@ -62,6 +62,7 @@ int main(){
     char ExitMessage[100] = "\n\tProgram is now exiting... Have a nice day!\n";
 
     reminders();
+    system("cls");
     
     while(1){ 
         display();
@@ -936,7 +937,7 @@ int yearchecker(int year)
 }
 
 //This function checks if the user inputs valid branch code 
-int branchchecker(char branch[]){
+int branchchecker(char *branch){
     if (strlen(branch) == 5)
     {
         return 1; // Valid branch code
