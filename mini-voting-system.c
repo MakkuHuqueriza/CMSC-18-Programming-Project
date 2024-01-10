@@ -100,7 +100,7 @@ int main(){
 //This function displays introductory message about the program
 void display(){
 	printf("\n=================================================================================================================\n");
-    printf("                                     WELCOME TO THE MINI-VOTING SYSTEM\n");
+    printf("                                WELCOME TO THE VOTELITE: MINI-VOTING SYSTEM\n");
     printf("        (Please be aware that unanticipated actions or inputs may cause program issues or termination)\n");
     printf("=================================================================================================================\n");
 }
