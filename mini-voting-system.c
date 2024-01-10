@@ -255,10 +255,8 @@ void initiateNewElection(){
             printf("\nPlease re-enter a valid amount of candidates\n");
         }  
     }while(!candidatechecker(numberOfCandidates));
-        
+   
 
-    
-    
     int i;
    	for (i = 0; i < currentValidID.totalVoters; i++)
     {
