@@ -969,7 +969,3 @@ int candidatechecker(int num){
         return 0; // Invalid number of total candidates
     }
 }
-
-
-
-
