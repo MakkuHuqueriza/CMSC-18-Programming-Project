@@ -35,12 +35,12 @@ VoteLite: Mini-Voting System is a console-based application implemented in C to 
 ```
 Compile the Source Code:
 ``` bash
-gcc main.c -o main
+gcc mini-voting-system.c -o main
 ```
 ## <a id="usage"></a>Usage
 Execute the Program by running the executable
 ```bash
-./main
+./mini-voting-system
 ```
 ## <a id="contributing"></a>Contributing
 If you want to improve this project and contribute, here are the steps below.
