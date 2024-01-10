@@ -31,7 +31,7 @@ VoteLite: Mini-Voting System is a console-based application implemented in C to 
 ## <a id="installation"></a>Installation 
  Clone the repository
   ```bash
-  git clone https://github.com/yldevier/Event-Ticketing-System.git
+  git clone https://github.com/MakkuHuqueriza/CMSC-18-Programming-Project.git
 ```
 Compile the Source Code:
 ``` bash
