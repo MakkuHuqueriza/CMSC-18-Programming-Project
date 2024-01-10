@@ -27,6 +27,7 @@ char studentVotes[500]; //To store information of votes given by each student
 //Sample User ID:2018hello00064 year:2018 branch code:hello rollno:00064
 
 //Function prototypes
+void reminders();
 void display();
 int choiceforUser();
 int loadelectionchecker();
@@ -59,6 +60,8 @@ int main(){
     char choice;
     int i;
     char ExitMessage[100] = "\n\tProgram is now exiting... Have a nice day!\n";
+
+    reminders();
     
     while(1){ 
         display();
@@ -95,6 +98,22 @@ int main(){
         }
     }
     return 0;
+}
+
+//This function displays reminders/things to understand in the program
+void reminders(){
+	printf("\n=================================================================================================================\n");
+    printf("                                WELCOME TO THE VOTELITE: MINI-VOTING SYSTEM\n\n");
+    printf("        Before using this mini-voting program. Here are the important things to understand:\n");
+    printf("        1. User ID is used for identifying voters.\n");
+    printf("        2. User ID is a 14-characters long word/string which consist of a year, a branch code, a roll number respectively.\n");
+    printf("        3. The administrators/handlers of the election should provide the voters their User ID manually\n");
+    printf("        4. The roll numbers are based on the number of voters in an election and are in incrementing order\n");
+    printf("           meaning if there are 5 voters, the valid roll numbers are 00001 until 00005.\n");
+    printf("\n        Sample User ID:2018hello00064 year:2018 branch code:hello rollno:00064\n\n");
+    printf("=================================================================================================================\n");
+    printf("Press any key to continue: ");
+    getch();
 }
 
 //This function displays introductory message about the program
