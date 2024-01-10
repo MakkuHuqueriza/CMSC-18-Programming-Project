@@ -111,7 +111,7 @@ void reminders(){
     printf("        3. The administrators/handlers of the election should provide the voters their User ID manually\n");
     printf("        4. The roll numbers are based on the number of voters in an election and are in incrementing order\n");
     printf("           meaning if there are 5 voters, the valid roll numbers are 00001 until 00005.\n");
-    printf("\n        Sample User ID:2018hello00064 year:2018 branch code:hello rollno:00064\n\n");
+    printf("\n        Sample User ID: 2018hello00064   Year: 2018   Branch code: hello  Roll No: 00064\n\n");
     printf("=================================================================================================================\n");
     printf("Press any key to continue: ");
     getch();
