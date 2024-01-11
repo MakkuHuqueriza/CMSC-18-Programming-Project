@@ -652,6 +652,24 @@ void banID(){
     }
     fclose(fp);
 
+     // Load banned votes
+    int location;
+
+    FILE *f3;
+    f3 = fopen("banned.txt", "r+");
+    if (f3 == NULL){
+        fclose(f3);        // Close the banned.txt file before returning
+        
+    }
+    else{
+        while (fscanf(f3, "%d", &location) == 1){
+
+            studentVotes[location - 1] = '$';
+        }
+    }
+
+    fclose(f3);
+
     int i;
     strcpy(message, "\nCreated Successfully. User ID/s banned/unbanned successfully.\nPress any key to continue: ");
 
