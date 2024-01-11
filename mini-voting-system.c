@@ -108,6 +108,7 @@ void reminders(){
     printf("        Before using this mini-voting program. Here are the important things to understand:\n");
     printf("        1. User ID is used for identifying voters.\n");
     printf("        2. User ID is a 14-characters long word/string which consist of a year, a branch code, a roll number respectively.\n");
+    printf("           respectively.\n");
     printf("        3. The administrators/handlers of the election should provide the voters their User ID manually\n");
     printf("        4. The roll numbers are based on the number of voters in an election and are in incrementing order\n");
     printf("           meaning if there are 5 voters, the valid roll numbers are 00001 until 00005.\n");
@@ -691,6 +692,21 @@ void studentPanel()
     totalVoters = currentValidID.totalVoters;
 
 	ctr = readVoteCount();
+
+    // Check if the loop ended because ctr exceeded totalVoters
+	if (ctr == totalVoters)
+	{
+	char EndMessage[100]     = " \n\tAll votes have been cast. Exiting...\n";
+	    for(i=0; i<strlen(EndMessage); i++)
+	    {
+	        printf("%c",EndMessage[i]);
+	        Sleep(40);
+	    }
+    Sleep(2000);
+	system("cls");	
+    return;
+	}
+
     do
     {
     	printf("\n===============================================================================");
