@@ -635,11 +635,13 @@ void banID(){
 
         printf("Error: Banned.txt not created.\n");
         fclose(fp);
-        return;
+        return; 
     }
     printf("Enter a student last roll number to ban. Press 0 to exit:");
     printf("\nTo remove certain User ID from being banned, Re-input every student last roll number except the student last roll number of that certain User ID.");
     printf("\nTo remove all User IDs from being banned, just input 0:");
+    printf("\nFor the removal of any User ID/s, run Continue Previous Election to apply the changes");
+    printf("\nHowever, it is still recommended to run Continue Previous Election after accessing this panel to ensure that changes has been applied");
     int input;
     while(1){
 
@@ -651,24 +653,6 @@ void banID(){
         fprintf(fp,"%d\n",input);
     }
     fclose(fp);
-
-     // Load banned votes
-    int location;
-
-    FILE *f3;
-    f3 = fopen("banned.txt", "r+");
-    if (f3 == NULL){
-        fclose(f3);        // Close the banned.txt file before returning
-        
-    }
-    else{
-        while (fscanf(f3, "%d", &location) == 1){
-
-            studentVotes[location - 1] = '$';
-        }
-    }
-
-    fclose(f3);
 
     int i;
     strcpy(message, "\nCreated Successfully. User ID/s banned/unbanned successfully.\nPress any key to continue: ");
@@ -863,7 +847,7 @@ int isVoted(char userID[15])
 int isBanned(char userID[15]){
     int location=extractRollNo(userID);
     if(studentVotes[location-1]=='$')
-        return 1; // The student is banned
+        return 0; // The student is not banned
     else
         return 0; // The student is not banned
 }
