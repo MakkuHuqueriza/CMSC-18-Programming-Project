@@ -640,8 +640,7 @@ void banID(){
     printf("Enter a student last roll number to ban. Press 0 to exit:");
     printf("\nTo remove certain User ID from being banned, Re-input every student last roll number except the student last roll number of that certain User ID.");
     printf("\nTo remove all User IDs from being banned, just input 0:");
-    printf("\nFor the removal of any User ID/s, run Continue Previous Election to apply the changes");
-    printf("\nHowever, it is still recommended to run Continue Previous Election after accessing this panel to ensure that changes has been applied");
+
     int input;
     while(1){
 
@@ -653,6 +652,8 @@ void banID(){
         fprintf(fp,"%d\n",input);
     }
     fclose(fp);
+
+    loadElectionInfoFromFile();
 
     int i;
     strcpy(message, "\nCreated Successfully. User ID/s banned/unbanned successfully.\nPress any key to continue: ");
