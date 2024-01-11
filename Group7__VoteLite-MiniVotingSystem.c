@@ -522,7 +522,7 @@ void loadElectionInfoFromFile()
     // Print success message only if all files were loaded successfully
     if (successFlag){
         int i;
-        strcpy(message, "\n\tElection information loaded successfully. Press any key to continue:");
+        strcpy(message, "\nElection information loaded successfully. Press any key to continue:");
 
 	    for(i=0; i<strlen(message); i++)
 	    {
@@ -533,7 +533,7 @@ void loadElectionInfoFromFile()
     } else {
 
         int i;
-        strcpy(message, "\n\tError: Unable to load all date. Please check the files and try again.\n\t Press any key to continue: ");
+        strcpy(message, "\nError: Unable to load all date. Please check the files and try again.\n\tPress any key to continue: ");
 
 	    for(i=0; i<strlen(message); i++)
 	    {
@@ -848,7 +848,7 @@ int isVoted(char userID[15])
 int isBanned(char userID[15]){
     int location=extractRollNo(userID);
     if(studentVotes[location-1]=='$')
-        return 0; // The student is not banned
+        return 1; // The student is not banned
     else
         return 0; // The student is not banned
 }
